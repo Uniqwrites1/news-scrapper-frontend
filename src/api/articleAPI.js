@@ -20,6 +20,10 @@ export const articleAPI = {
     return api.get('/api/incident-types');
   },
   
+  getTopics: () => {
+    return api.get('/api/topics');
+  },
+  
   getLocations: () => {
     return api.get('/api/locations');
   },

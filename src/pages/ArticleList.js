@@ -11,11 +11,14 @@ function ArticleList() {
     source: '',
     location: '',
     incident_type: '',
+    topic: '',
+    priority_only: false,
     days: 7,
   });
   const [sources, setSources] = useState([]);
   const [locations, setLocations] = useState([]);
   const [incidentTypes, setIncidentTypes] = useState([]);
+  const [topics, setTopics] = useState([]);
   const [pagination, setPagination] = useState({ skip: 0, limit: 10 });
 
   useEffect(() => {
@@ -31,14 +34,16 @@ function ArticleList() {
 
   const fetchMetadata = async () => {
     try {
-      const [sourcesRes, locationsRes, typesRes] = await Promise.all([
+      const [sourcesRes, locationsRes, typesRes, topicsRes] = await Promise.all([
         articleAPI.getSources(),
         articleAPI.getLocations(),
         articleAPI.getIncidentTypes(),
+        articleAPI.getTopics(),
       ]);
       setSources(sourcesRes.data.sources || []);
       setLocations(locationsRes.data.locations || []);
       setIncidentTypes(typesRes.data.incident_types || []);
+      setTopics(topicsRes.data.topics || []);
     } catch (error) {
       console.error('Error fetching metadata:', error);
     }
@@ -55,6 +60,8 @@ function ArticleList() {
       if (filters.source) params.source = filters.source;
       if (filters.location) params.location = filters.location;
       if (filters.incident_type) params.incident_type = filters.incident_type;
+      if (filters.topic) params.topic = filters.topic;
+      if (filters.priority_only) params.priority_only = filters.priority_only;
 
       const response = await articleAPI.getArticles(params);
       setArticles(response.data.articles);
@@ -66,13 +73,14 @@ function ArticleList() {
   };
 
   const handleFilterChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     setFilters((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: type === 'checkbox' ? checked : value,
     }));
     setPagination({ skip: 0, limit: 10 });
   };
+
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -122,7 +130,7 @@ function ArticleList() {
   return (
     <div className="article-list">
       <div className="article-header">
-        <h1>🔍 Security News Feed</h1>
+        <h1>📰 Nigerian News Feed</h1>
         <button 
           className={`scrape-btn ${scraping ? 'scraping' : ''}`} 
           onClick={triggerScrape}
@@ -149,6 +157,20 @@ function ArticleList() {
           <option value={7}>Last 7 days</option>
           <option value={30}>Last 30 days</option>
           <option value={90}>Last 90 days</option>
+        </select>
+
+        <select
+          name="topic"
+          value={filters.topic}
+          onChange={handleFilterChange}
+          className="filter-select"
+        >
+          <option value="">All Topics</option>
+          {topics.map((topic) => (
+            <option key={topic} value={topic}>
+              {topic.charAt(0).toUpperCase() + topic.slice(1)}
+            </option>
+          ))}
         </select>
 
         <select
@@ -192,6 +214,16 @@ function ArticleList() {
             </option>
           ))}
         </select>
+
+        <label className="priority-checkbox">
+          <input
+            type="checkbox"
+            name="priority_only"
+            checked={filters.priority_only}
+            onChange={handleFilterChange}
+          />
+          🔴 Abuja Traffic/Security Only
+        </label>
       </div>
 
       {loading ? (
@@ -202,7 +234,11 @@ function ArticleList() {
         <>
           <div className="articles">
             {articles.map((article) => (
-              <div key={article.id} className="article-card">
+              <div key={article.id} className={`article-card ${article.is_priority ? 'priority-article' : ''}`}>
+                {article.is_priority && (
+                  <div className="priority-badge">🔴 PRIORITY: Abuja {article.topic}</div>
+                )}
+                
                 <div className="article-header-card">
                   <span className="incident-icon">
                     {getIncidentIcon(article.incident_type)}
@@ -212,6 +248,8 @@ function ArticleList() {
 
                 <div className="article-metadata">
                   <span className="source-badge">{article.source}</span>
+                  {article.topic && <span className="topic-badge">{article.topic.charAt(0).toUpperCase() + article.topic.slice(1)}</span>}
+                  {article.is_priority && <span className="priority-badge">⭐ Priority</span>}
                   <span className="date">{formatDate(article.published_date)}</span>
                 </div>
 

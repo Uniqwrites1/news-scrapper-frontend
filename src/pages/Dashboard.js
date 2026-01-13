@@ -34,7 +34,7 @@ function Dashboard() {
   return (
     <div className="dashboard">
       <div className="dashboard-header">
-        <h1>📊 Security News Analytics</h1>
+        <h1>📊 Nigerian News Analytics</h1>
         <div className="time-filter">
           <label>Period: </label>
           <select value={days} onChange={(e) => setDays(parseInt(e.target.value))}>
@@ -49,11 +49,15 @@ function Dashboard() {
       <div className="stats-grid">
         <div className="stat-card primary">
           <div className="stat-number">{statistics.total_articles}</div>
-          <div className="stat-label">Total Security Articles</div>
+          <div className="stat-label">Total Articles</div>
+        </div>
+        <div className="stat-card priority">
+          <div className="stat-number">{statistics.priority_articles || 0}</div>
+          <div className="stat-label">Priority (Abuja)</div>
         </div>
         <div className="stat-card secondary">
           <div className="stat-number">{statistics.by_source.length}</div>
-          <div className="stat-label">News Sources Tracked</div>
+          <div className="stat-label">News Sources</div>
         </div>
         <div className="stat-card tertiary">
           <div className="stat-number">{statistics.top_locations.length}</div>
@@ -62,6 +66,22 @@ function Dashboard() {
       </div>
 
       <div className="analytics-grid">
+        <div className="card">
+          <h3>📚 Articles by Topic</h3>
+          <ul className="topic-list">
+            {statistics.by_topic && statistics.by_topic.length > 0 ? (
+              statistics.by_topic.map((item) => (
+                <li key={item.topic}>
+                  <span>{item.topic.charAt(0).toUpperCase() + item.topic.slice(1)}</span>
+                  <span className="count">{item.count}</span>
+                </li>
+              ))
+            ) : (
+              <li>No topic data available</li>
+            )}
+          </ul>
+        </div>
+
         <div className="card">
           <h3>📰 Articles by Source</h3>
           <ul className="source-list">
@@ -86,7 +106,7 @@ function Dashboard() {
           </ul>
         </div>
 
-        <div className="card full-width">
+        <div className="card">
           <h3>📍 Top Affected Locations</h3>
           <div className="location-list">
             {statistics.top_locations.map((item, index) => (
