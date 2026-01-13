@@ -63,7 +63,9 @@ function ArticleList() {
       if (filters.topic) params.topic = filters.topic;
       if (filters.priority_only) params.priority_only = filters.priority_only;
 
+      console.log('Fetching articles with params:', params);
       const response = await articleAPI.getArticles(params);
+      console.log('Received articles:', response.data.articles.length);
       setArticles(response.data.articles);
     } catch (error) {
       console.error('Error fetching articles:', error);

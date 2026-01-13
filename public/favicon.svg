@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" width="180" height="180">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a472a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2d5a3d;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="90" cy="90" r="90" fill="url(#bgGrad)"/>
+  
+  <!-- Newspaper/Document icon -->
+  <g transform="translate(45, 50)">
+    <!-- Paper -->
+    <rect x="5" y="5" width="60" height="70" rx="2" fill="white" stroke="#FFD700" stroke-width="2"/>
+    
+    <!-- Header lines (representing news) -->
+    <line x1="12" y1="15" x2="58" y2="15" stroke="#1a472a" stroke-width="2"/>
+    <line x1="12" y1="23" x2="58" y2="23" stroke="#1a472a" stroke-width="2"/>
+    
+    <!-- Content lines -->
+    <line x1="12" y1="33" x2="58" y2="33" stroke="#999" stroke-width="1.5"/>
+    <line x1="12" y1="40" x2="58" y2="40" stroke="#999" stroke-width="1.5"/>
+    <line x1="12" y1="47" x2="58" y2="47" stroke="#999" stroke-width="1.5"/>
+    <line x1="12" y1="54" x2="48" y2="54" stroke="#999" stroke-width="1.5"/>
+    
+    <!-- Breaking News Badge -->
+    <circle cx="50" cy="65" r="8" fill="#FF6B6B" stroke="white" stroke-width="1"/>
+    <text x="50" y="68" font-size="10" fill="white" font-weight="bold" text-anchor="middle">!</text>
+  </g>
+  
+  <!-- Nigeria flag colors accent (subtle) -->
+  <g opacity="0.3">
+    <rect x="0" y="120" width="60" height="20" fill="#1a472a"/>
+    <rect x="60" y="120" width="60" height="20" fill="white"/>
+    <rect x="120" y="120" width="60" height="20" fill="#FF6B6B"/>
+  </g>
+</svg>
